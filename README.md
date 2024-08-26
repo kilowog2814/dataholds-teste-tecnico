@@ -18,6 +18,8 @@ Este repositório contém scripts e configurações para um teste técnico da Da
 
 - `schema_validation.py`: Script Python para validação de esquema de dados usando Pandera.
 
+- `sql_validation_table.py`: Script de validação da tabela sales_data_with_dates existe ou não no banco.
+
 ## Requisitos
 
 Certifique-se de ter o Python instalado em seu sistema. Para instalar as dependências do projeto, execute o seguinte comando:

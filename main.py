@@ -50,7 +50,7 @@ def main():
                                             'valor_tabela_de_preco_do_produto':np.float64
                                         })
 
-        logger.info("convertendo campos de dados......")
+        logger.info("ajustando campo de data......")
         df_sales_stage['data_venda'] = pd.to_datetime(df_sales_stage['data_venda'],
                                                       dayfirst=True,
                                                       errors="coerce")
@@ -65,6 +65,10 @@ def main():
         logger.info("validando schema.....")
         schema_validation(df_sales_stage)
         logger.success("dados validados")
+
+        logger.info("validando tabela no banco.....")
+
+        validarTabela(logger)
 
         logger.info("subindo dados na tabela sales_data_with_dates")
 
