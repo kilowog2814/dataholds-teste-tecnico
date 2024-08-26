@@ -66,17 +66,13 @@ def main():
         schema_validation(df_sales_stage)
         logger.success("dados validados")
 
-        logger.info("validando tabela no banco.....")
-
-        validarTabela(logger)
-
         logger.info("subindo dados na tabela sales_data_with_dates")
 
         df_sales_stage.to_sql(
             name="sales_data_with_dates",
             con=postgre_engine,
             index=False,
-            if_exists='replace',
+            if_exists='append',
             chunksize=100
         )
         logger.success(f"Importação finalizada, {len(df_sales_stage)} linhas incluidas na tabela sales_data_with_dates")
