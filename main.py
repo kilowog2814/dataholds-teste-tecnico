@@ -5,6 +5,7 @@ import os
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from schema_validation import schema_validation
+from sql_validation_table import validarTabela
 import numpy as np
 import time
 
@@ -22,7 +23,7 @@ postgre_engine = create_engine(
     f"postgresql://{POSTGRE_USER}:{POSTGRE_PWD}@{POSTGRE_HOST}:{POSTGRE_PORT}/{POSTGRE_DATABASE}"
 )
 
-log_path = datetime.today().strftime("%Y/%m/%d/")
+log_path = datetime.today().strftime("%Y/%m/%d")
 log_name = datetime.today().strftime("sales_data_with_dates_%H-%M-%S.log")
 
 logger.add(f"logs/{log_path}/{log_name}")
@@ -37,20 +38,20 @@ def main():
         logger.info(f"abrindo arquivo {DATA_FILE_PATH.split("/")[1]}")
         df_sales_stage = pd.read_excel(DATA_FILE_PATH,
                                        dtype={
-                                            'numero_nota': np.int32,
+                                            'numero_nota': np.int64,
                                             'codigo_produto': str,
                                             'descricao_produto': str,
                                             'codigo_cliente': str,
                                             'descricao_cliente': str,
                                             'valor_unitario_produto': np.float64,
-                                            'quantidade_vendida_produto': np.int32,
+                                            'quantidade_vendida_produto': np.int64,
                                             'valor_total': np.float64,
                                             'custo_da_venda': np.float64,
-                                            'valor_tabela_de_preco_do_produto':np.int32
+                                            'valor_tabela_de_preco_do_produto':np.float64
                                         })
-        
+
         logger.info("convertendo campos de dados......")
-        df_sales_stage['data_venda_2'] = pd.to_datetime(df_sales_stage['data_venda'],
+        df_sales_stage['data_venda'] = pd.to_datetime(df_sales_stage['data_venda'],
                                                       dayfirst=True,
                                                       errors="coerce")
 
@@ -62,9 +63,14 @@ def main():
         df_sales_stage = df_sales_stage.dropna()
 
         logger.info("validando schema.....")
-        ## schema_validation(df_sales_stage)
+        schema_validation(df_sales_stage)
+        logger.success("dados validados")
 
-        logger.info(f"subindo dados na tabela sales_data_with_dates")
+        logger.info("validando tabela no banco.....")
+
+        validarTabela(logger)
+
+        logger.info("subindo dados na tabela sales_data_with_dates")
 
         df_sales_stage.to_sql(
             name="sales_data_with_dates",
@@ -75,7 +81,7 @@ def main():
         )
         logger.success(f"Importação finalizada, {len(df_sales_stage)} linhas incluidas na tabela sales_data_with_dates")
         logger.success("Processo finalizado!!!")
-      
+
 
     except FileNotFoundError as file_error:
         logger.exception(file_error)
