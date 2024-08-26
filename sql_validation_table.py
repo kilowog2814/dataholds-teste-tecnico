@@ -19,7 +19,7 @@ def truncate_table(cur, logger):
     try:
         logger.info("apagando dados da tabela...")
         cur.execute("TRUNCATE TABLE public.sales_data_with_dates")
-        logger.sucess("dados apagados com sucesso.")
+        logger.success("dados apagados com sucesso.")
     except Exception as e:
         logger.exception(e)
         raise
