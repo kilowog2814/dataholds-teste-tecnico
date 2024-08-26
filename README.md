@@ -22,6 +22,8 @@ Este repositório contém scripts e configurações para um teste técnico da Da
 
 ## Requisitos
 
+O projeto foi desenvolvido na versão 3.12.5 do python.
+
 Certifique-se de ter o Python instalado em seu sistema. Para instalar as dependências do projeto, execute o seguinte comando:
 
 ```bash
@@ -30,7 +32,12 @@ pip install -r requirements.txt
 
 ## Ordem de Execução 
 
-Para rodar todo o processo de importação é necessario rodar o script `main.py`
+Para iniciar o processo de importação, siga as etapas:
+
+1. Incluir os dados de acesso ao banco de dados no arquivo `.env`
+2. Gerar o ambiente com as bibliotecas do `requirements.txt`
+3. Rodar o script `main.py` disponivel no repositorio
+
 
 ## Execução via Docker
 
