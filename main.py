@@ -5,7 +5,7 @@ import os
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from schema_validation import schema_validation
-from sql_validation_table import validarTabela
+from sql_validation_table import validation_tables
 import numpy as np
 import time
 
@@ -68,18 +68,54 @@ def main():
 
         logger.info("validando tabela no banco.....")
 
-        validarTabela(logger)
+        validation_tables(logger)
 
-        logger.info("subindo dados na tabela sales_data_with_dates")
+        logger.success("tabelas validadas.....")
 
-        df_sales_stage.to_sql(
-            name="sales_data_with_dates",
+        logger.info("subindo dados na tabela dim_produtos")
+
+        df_dim_produtos = df_sales_stage[['codigo_produto', 'descricao_produto',
+                                          'valor_tabela_de_preco_do_produto']].drop_duplicates()
+        
+        df_dim_produtos.to_sql(
+            name="dim_produto",
             con=postgre_engine,
             index=False,
             if_exists='append',
             chunksize=100
         )
-        logger.success(f"Importação finalizada, {len(df_sales_stage)} linhas incluidas na tabela sales_data_with_dates")
+
+        logger.success(f"Importação finalizada, {len(df_dim_produtos)} linhas incluidas na tabela dim_produtos")
+
+        df_dim_clientes = df_sales_stage[['codigo_cliente', 'descricao_cliente']].drop_duplicates()
+       
+        df_dim_clientes.to_sql(
+            name="dim_cliente",
+            con=postgre_engine,
+            index=False,
+            if_exists='append',
+            chunksize=100
+        )
+  
+        logger.info("subindo dados na tabela dim_clientes")
+        logger.success(f"Importação finalizada, {len(df_dim_produtos)} linhas incluidas na tabela dim_clientes")
+
+        logger.info("subindo dados na tabela fact_sales_with_dates")
+
+        fact_sales_with_dates = df_sales_stage.drop(
+            columns=['descricao_produto',
+                     'valor_tabela_de_preco_do_produto',
+                     'descricao_cliente'])
+        
+        fact_sales_with_dates.to_sql(
+            name="fact_sales_with_dates",
+            con=postgre_engine,
+            index=False,
+            if_exists='append',
+            chunksize=100
+        )
+        logger.success(f"Importação finalizada, {len(fact_sales_with_dates)} linhas incluidas na tabela fact_sales_with_dates")
+        
         logger.success("Processo finalizado!!!")
 
 
