@@ -10,7 +10,11 @@ Este repositório contém scripts e configurações para um teste técnico da Da
 
 - `.env`: variveis de conexão com o banco de dados postegreSQL.
 
-- `create_sales_data_with_dates.sql`: Script de criação da tabela sales_data_with_dates.
+- `create_sales_data_with_dates.sql`: Script de criação da tabela fato sales_data_with_dates.
+
+- `create_dim_clientes.sql`: Script de criação da tabela dimensão cliente.
+
+- `create_dim_produto.sql`: Script de criação da tabela dimensão produto.
 
 - `main.py`: Script principal que orquestra a execução dos demais scripts do projeto.
 
@@ -18,7 +22,7 @@ Este repositório contém scripts e configurações para um teste técnico da Da
 
 - `schema_validation.py`: Script Python para validação de esquema de dados usando Pandera.
 
-- `sql_validation_table.py`: Script de validação da tabela sales_data_with_dates existe ou não no banco.
+- `sql_validation_table.py`: Script de validação das tabelas existe ou não no banco.
 
 ## Requisitos
 
@@ -49,8 +53,5 @@ docker build --tag sales-data-import:latest .
 Criação do conteiner
 
 ```bash
-docker run -d \
-  --name import-sales \
-  -v $(pwd)/logs:/app/logs \
-  sales-data-import:latest
+docker run --rm --name import_sales -v ${PWD}/logs:/app/logs sales-data-import:latest
 ```
