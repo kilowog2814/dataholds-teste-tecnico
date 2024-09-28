@@ -1,6 +1,6 @@
 # Projeto de Validação de Dados e Criação de Tabelas de Vendas
 
-Este repositório contém scripts e configurações para um teste técnico da Dataholds, focado na criação de tabelas de vendas e validação de dados.
+Este repositório contém scripts e configurações para um teste, focado na criação de tabelas de vendas e validação de dados.
 
 ## Estrutura do Repositório
 
